@@ -7,19 +7,19 @@ interface ItemAttributes {
     itemType: string;
     amount: number;
     metadata?: string;
-    mailId: number;
+    MailId?: number; // Changed from mailId to MailId to match Sequelize convention
     createdAt?: Date;
     updatedAt?: Date;
 }
 
-interface ItemCreationAttributes extends Optional<ItemAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ItemCreationAttributes extends Optional<ItemAttributes, 'id' | 'MailId' | 'createdAt' | 'updatedAt'> {}
 
 class Item extends Model<ItemAttributes, ItemCreationAttributes> implements ItemAttributes {
     declare id: number;
     declare itemType: string;
     declare amount: number;
     declare metadata?: string;
-    declare mailId: number;
+    declare MailId?: number;
     declare readonly createdAt: Date;
     declare readonly updatedAt: Date;
 }
@@ -40,13 +40,6 @@ Item.init({
     },
     metadata: {
         type: DataTypes.STRING
-    },
-    mailId: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Mail,
-            key: 'id'
-        }
     }
 }, {
     sequelize,
