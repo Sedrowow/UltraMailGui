@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mail Management System</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/">Home</a>
+            <a href="/mail">Mail</a>
+            <% if (user && user.isAdmin) { %>
+                <a href="/admin">Admin</a>
+            <% } %>
+        </div>
+    </nav>
+
+    <main>
+        <%- body %>
+    </main>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<%- include('../layouts/main') %>
+
+<div class="mail-list">
+    <h2>Your Mails</h2>
+    <div class="mail-container">
+        <% mails.forEach(mail => { %>
+            <div class="mail-item">
+                <h3><a href="/mail/<%= mail._id %>"><%= mail.subject %></a></h3>
+                <p>From: <%= mail.sender %></p>
+                <p>Date: <%= mail.createdAt.toLocaleDateString() %></p>
+            </div>
+        <% }); %>
+    </div>
+</div>

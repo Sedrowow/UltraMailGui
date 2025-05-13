@@ -1,0 +1,32 @@
+<%- include('../layouts/main') %>
+
+<div class="mail-view">
+    <div class="mail-header">
+        <h2><%= mail.subject %></h2>
+        <div class="mail-meta">
+            <p>From: <%= mail.sender %></p>
+            <p>Date: <%= mail.createdAt.toLocaleDateString() %></p>
+            <p>Server: <%= mail.serverName %></p>
+        </div>
+    </div>
+    
+    <div class="mail-body">
+        <p><%= mail.body %></p>
+    </div>
+
+    <% if (mail.items && mail.items.length > 0) { %>
+        <div class="mail-items">
+            <h3>Attached Items:</h3>
+            <ul>
+                <% mail.items.forEach(item => { %>
+                    <li>
+                        <%= item.itemType %> x <%= item.amount %>
+                        <% if (item.metadata) { %>
+                            (Meta: <%= item.metadata %>)
+                        <% } %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } %>
+</div>
