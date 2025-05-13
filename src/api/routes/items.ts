@@ -6,7 +6,7 @@ const router = Router();
 router.get('/:mailId', async (req, res) => {
     try {
         const items = await Item.findAll({
-            where: { mailId: req.params.mailId }
+            where: { MailId: req.params.mailId }
         });
         res.json(items);
     } catch (error) {
