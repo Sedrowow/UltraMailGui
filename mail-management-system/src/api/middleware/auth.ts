@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { validateBearerToken } from '../../utils/validators';
 
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.headers.authorization;
+        const authHeader = req.headers.authorization;
         
-        if (!validateBearerToken(token)) {
+        if (!authHeader?.startsWith('Bearer ')) {
             return res.status(401).json({ error: 'Invalid token format' });
         }
 
-        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET!);
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
         req.user = decoded;
         next();
     } catch (error) {

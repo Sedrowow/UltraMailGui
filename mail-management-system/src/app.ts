@@ -1,6 +1,6 @@
 import express from 'express';
 import { json, urlencoded } from 'body-parser';
-import { connectDatabase } from './database/config';
+import sequelize, { connectDatabase } from './database/config';
 import mailRouter from './api/routes/mail';
 import itemRouter from './api/routes/items';
 import authRouter from './api/routes/auth';
