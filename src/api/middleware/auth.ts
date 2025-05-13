@@ -1,53 +1,27 @@
-mail-management-system
-├── src
-│   ├── api
-│   │   ├── controllers
-│   │   │   ├── mailController.ts
-│   │   │   ├── itemController.ts
-│   │   │   └── authController.ts
-│   │   ├── middleware
-│   │   │   ├── auth.ts
-│   │   │   └── adminCheck.ts
-│   │   ├── routes
-│   │   │   ├── mail.ts
-│   │   │   ├── items.ts
-│   │   │   └── auth.ts
-│   │   └── models
-│   │       ├── Mail.ts
-│   │       ├── Item.ts
-│   │       └── User.ts
-│   ├── database
-│   │   ├── config.ts
-│   │   └── migrations
-│   │       └── initial.ts
-│   ├── services
-│   │   ├── mailService.ts
-│   │   └── tokenService.ts
-│   ├── types
-│   │   └── index.ts
-│   ├── utils
-│   │   └── validators.ts
-│   ├── app.ts
-│   └── server.ts
-├── public
-│   ├── css
-│   │   └── styles.css
-│   └── js
-│       └── main.ts
-├── views
-│   ├── layouts
-│   │   └── main.ejs
-│   ├── mail
-│   │   ├── list.ejs
-│   │   └── view.ejs
-│   └── auth
-│       └── login.ejs
-├── tests
-│   └── api
-│       ├── mail.test.ts
-│       └── auth.test.ts
-├── .env
-├── .gitignore
-├── package.json
-├── tsconfig.json
-└── README.md
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+
+export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader?.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Invalid token format' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ error: 'Authentication failed' });
+    }
+};
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: any;
+        }
+    }
+}

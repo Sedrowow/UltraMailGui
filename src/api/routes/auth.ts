@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import AuthController from '../controllers/authController';
-import { authenticate } from '../middleware/auth';
+import jwt from 'jsonwebtoken';
 
 const router = Router();
-const authController = new AuthController();
 
-// Route for user login
-router.post('/login', authController.login);
+router.post('/login', (req, res) => {
+    // Simple auth for development - replace with proper auth
+    const { mcUUID } = req.body;
+    if (!mcUUID) {
+        return res.status(400).json({ error: 'mcUUID is required' });
+    }
 
-// Route for user registration
-router.post('/register', authController.register);
-
-// Route for getting user profile (authenticated)
-router.get('/profile', authenticate, authController.getProfile);
+    const token = jwt.sign({ mcUUID }, process.env.JWT_SECRET || 'dev_secret');
+    res.json({ token });
+});
 
 export default router;

@@ -1,39 +1,48 @@
 // src/api/models/Mail.ts
 
-import { Schema, model } from 'mongoose';
+import { Model, DataTypes } from 'sequelize';
+import sequelize from '../../database/config';
 
-interface Mail {
-    sender: string;
-    recipient: string;
-    subject: string;
-    body: string;
-    items: {
-        itemType: string;
-        amount: number;
-        metadata?: string;
-    }[];
-    serverName: string;
-    mcUUID: string;
-    createdAt: Date;
-    updatedAt: Date;
+class Mail extends Model {
+    declare id: number;
+    declare sender: string;
+    declare recipient: string;
+    declare subject: string;
+    declare body: string;
+    declare serverName: string;
+    declare mcUUID: string;
+    declare createdAt: Date;
+    declare updatedAt: Date;
 }
 
-const mailSchema = new Schema<Mail>({
-    sender: { type: String, required: true },
-    recipient: { type: String, required: true },
-    subject: { type: String, required: true },
-    body: { type: String, required: true },
-    items: [{
-        itemType: { type: String, required: true },
-        amount: { type: Number, required: true },
-        metadata: { type: String }
-    }],
-    serverName: { type: String, required: true },
-    mcUUID: { type: String, required: true }
+Mail.init({
+    sender: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    recipient: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    subject: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    body: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    serverName: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    mcUUID: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 }, {
-    timestamps: true,
+    sequelize,
+    modelName: 'Mail'
 });
 
-const MailModel = model<Mail>('Mail', mailSchema);
-
-export default MailModel;
+export default Mail;

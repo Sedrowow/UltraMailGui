@@ -1,32 +1,24 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { json, urlencoded } from 'body-parser';
 import { connectDatabase } from './database/config';
-import mailRoutes from './api/routes/mail';
-import itemRoutes from './api/routes/items';
-import authRoutes from './api/routes/auth';
+import mailRouter from './api/routes/mail';
+import itemRouter from './api/routes/items';
+import authRouter from './api/routes/auth';
 import { authenticate } from './api/middleware/auth';
-import { adminCheck } from './api/middleware/adminCheck';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(authenticate);
+app.use('/api/auth', authRouter);
+app.use('/api/*', authenticate); // Apply auth middleware to all API routes except auth
 
-// Routes
-app.use('/api/mail', mailRoutes);
-app.use('/api/items', itemRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/mail', mailRouter);
+app.use('/api/items', itemRouter);
 
 // Database connection
-connectDatabase();
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+connectDatabase()
+    .then(() => console.log('Database ready'))
+    .catch((err: Error) => console.error('Database setup error:', err));
 
 export default app;
